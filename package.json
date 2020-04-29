@@ -1,0 +1,37 @@
+{
+  "name": "tutoring-app",
+  "version": "1.0.0",
+  "description": "a Tutoring App",
+  "main": "app.js",
+  "scripts": {
+    "start": "set DEBUG=app,app:* & nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tutor"
+  ],
+  "author": "kayode Agboola",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.0.0",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.10",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.3"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "PORT": 4000
+    }
+  }
+}
