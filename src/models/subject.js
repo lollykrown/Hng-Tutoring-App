@@ -9,12 +9,12 @@ const subjectSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  // level: {
-  //   type: String,
-  //   enum: ['primary', 'jss', 'sss']
-  // },
+  level: {
+    type: String,
+    enum: ['primary', 'jss', 'sss']
+  },
   category: {
-    type: Schema.Types.OjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Category'
   }
 });

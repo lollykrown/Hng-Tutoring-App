@@ -6,7 +6,7 @@ const categorySchema = new mongoose.Schema({
     enum: ['Student', 'Tutor']
   },
   subjects: [{
-    type: Schema.Types.OjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Subject'
   }]
 });

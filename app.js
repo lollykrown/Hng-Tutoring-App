@@ -18,7 +18,11 @@ app.use(cors());
 
 
 const authRouter = require('./src/routes/authRoutes')();
+const categoryRouter = require('./src/routes/categoryRoutes')();
+
 app.use('/', authRouter);
+app.use('category', categoryRouter);
+
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
