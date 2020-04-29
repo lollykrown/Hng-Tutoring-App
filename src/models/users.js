@@ -5,17 +5,18 @@ const usersSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-	password: {
+	hashedPassword: {
     type: String,
     required: true
   },
   username: {
     type: String,
-    required: true
   },
   category: {
     type: String,
-    enum: ['Student', 'Tutor']
+    required: true,
+    default: 'student',
+    enum: ['student', 'tutor']
   },
   isAdmin: {
     type: Boolean,
