@@ -1,15 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const subjectSchema = new mongoose.Schema({
+const lessonSchema = new mongoose.Schema({
 	subject: {
     type: String,
     required: true
   },
-    tutors: [{
+	time: {
+    type: String,
+    default: []
+  },
+    tutors: {
     type: Schema.Types.ObjectId,
     ref: 'Tutor'
-  }],
+  },
   level: {
     type: String,
     enum: ['primary', 'jss', 'sss']

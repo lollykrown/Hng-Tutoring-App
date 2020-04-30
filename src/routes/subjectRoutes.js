@@ -36,17 +36,11 @@ function router() {
     });
     subjectRouter.route('/:subj')
     .get((req, res) => {
-      const { subject } = req.params.subj;
       (async function get() {
         try {
           Subject.findOne({ subject: req.params.subj }).populate('tutors').exec()
           .then(docs => res.status(200).json(docs))
           .catch(err => console.log(`Oops! ${err.stack}`));
-            //         .exec(function(err, docs) {
-            // if (err) return handleError(err);
-            // debug(docs);
-            // res.status(200).json(docs);
-          //})
         } catch (err) {
           console.log(err.stack);
         }

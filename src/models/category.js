@@ -6,6 +6,10 @@ const categorySchema = new Schema({
     type: String,
     enum: ['Student', 'Tutor']
   },
+  user: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Users'
+  }],
   subjects: [{
     type: Schema.Types.ObjectId,
     ref: 'Subject'

@@ -17,16 +17,21 @@ function router() {
           const tu = await tutor.save();
           debug(chalk.red(tu));
 
-          const subj = new Subject(
-            { subject: subject, 
-              tutors: [tu._id],
-              level: level });
-          const su = await Subject.find({subject});
-          debug(chalk.yellow(su));
-          const addedSubject = await Subject.findOneAndUpdate({subject}, {$push: {tutors: tu._id}}, {useFindAndModify: false, new: true}).exec()
-          debug(chalk.green(addedSubject));
+          let subj = [];
+          let addedSubject;
+          for (let s of subject){
+            debug(s);
+            subj.push(
+              { subject: s, 
+                tutors: [tu._id],
+                level: level }
+                );
+          addedSubject = await Subject.findOneAndUpdate({subject: s}, {$push: {tutors: tu._id}}, {useFindAndModify: false, new: true}).exec()
+          debug(chalk.grey(addedSubject));
+          }
+
           if (!addedSubject){
-            const sub = await subj.save();
+            const sub = await Subject.insertMany(subj);
             debug(chalk.blue(sub));
           }
           res.status(200).json({
@@ -41,6 +46,8 @@ function router() {
     .get((req, res) => {
       (async function getAll() {
         try {
+          // const up = await Tutor.updateMany({ subject: 'Chemistry'}, { subject: 'chemistry'} );
+          // debug(up);
           Tutor.find({}).exec()
             .then(docs => res.json(docs))
             .catch(err => console.log(`Oops! ${err}`));

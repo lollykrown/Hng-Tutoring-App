@@ -12,14 +12,9 @@ const tutorSchema = new mongoose.Schema({
   },
   classes: {
     type: Array,
-    //enum: ['primary','jss1', 'jss2', 'jss3', 'sss1', 'sss2', 'sss3']
   },
-  // subjects: [{
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'Subject'
-  // }],
 	subject: {
-    type: String
+    type: Array
   }
 });
 
