@@ -1,30 +1,33 @@
-const express = require('express');
 const mongoose = require('mongoose');
+const express = require('express');
 const debug = require('debug')('app');
 const morgan = require('morgan'); //logger
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
-const cors = require('cors')
+// const cors = require('cors')
 
 const app = express();
 require('./config/config.js');
 
-mongoose.connect(global.gConfig.database_url, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(global.gConfig.database_url, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('tiny'));
-app.use(cors());
+//app.use(cors());
 
 
 const authRouter = require('./src/routes/authRoutes')();
 const categoryRouter = require('./src/routes/categoryRoutes')();
+const subjectRouter = require('./src/routes/subjectRoutes')();
+const tutorRouter = require('./src/routes/tutorRoutes')();
 
 app.use('/', authRouter);
-app.use('category', categoryRouter);
+app.use('/category', categoryRouter);
+app.use('/subjects', subjectRouter);
+app.use('/tutor', tutorRouter);
 
-
-const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log('Connected to MongoDB');

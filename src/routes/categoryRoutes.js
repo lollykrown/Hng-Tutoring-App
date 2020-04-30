@@ -2,21 +2,21 @@ const express = require('express');
 const categoryRouter = express.Router();
 const Category = require('../models/category');
 const debug = require('debug')('app:categoryRoutes');
-
+const mongoose = require('mongoose');
 
 function router() {
-
-  authRouter.route('/category')
+  categoryRouter.route('/')
     .post((req, res) => {
-      (async function get() {
+      (async function pos() {
         try {
           const { category, subjects } = req.body;
           debug(category, subjects);
-          const categories = await Category.find({}).exec()
-
-          Category.find({}).exec()
-            .then(docs => res.status(200).json(docs))
-            .catch(err => console.log(`Oops! ${err}`));
+          const cat = new Category({ category, subjects });
+          cat.save();
+          res.status(200).json({
+            status: true,
+            message: 'Category saved',
+          })
         } catch (err) {
           console.log(err.stack);
         }
@@ -26,6 +26,18 @@ function router() {
       (async function get() {
         try {
           Category.find({}).exec()
+            .then(docs => res.json(docs))
+            .catch(err => console.log(`Oops! ${err}`));
+        } catch (err) {
+          console.log(err.stack);
+        }
+      }());
+    });
+    categoryRouter.route('/:cat')
+    .get((req, res) => {
+      (async function get() {
+        try {
+          Category.find({ category: req.params.category}).populate("subjects").exec()
             .then(docs => res.json(docs))
             .catch(err => console.log(`Oops! ${err}`));
         } catch (err) {

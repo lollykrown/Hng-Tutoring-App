@@ -9,7 +9,7 @@ function userController() {
     (async function auth() {
       try {
         const { email, password, username, cat } = req.body;
-        category = cat.toLowerCase();
+        const category = cat.toLowerCase();
         if (!email || !password || !category) {
           res.status(400).send({
             status: false,
@@ -33,7 +33,7 @@ function userController() {
               status: true,
               message: 'You have been successfully registered, Welcome to the Tutoring App',
               email: email
-            })
+            });
           })
           .catch(err => console.log(err));
       } catch (err) {
