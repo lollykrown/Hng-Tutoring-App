@@ -22,11 +22,13 @@ const authRouter = require('./src/routes/authRoutes')();
 const categoryRouter = require('./src/routes/categoryRoutes')();
 const subjectRouter = require('./src/routes/subjectRoutes')();
 const tutorRouter = require('./src/routes/tutorRoutes')();
+const lessonRouter = require('./src/routes/lessonRoutes')();
 
 app.use('/', authRouter);
 app.use('/category', categoryRouter);
 app.use('/subjects', subjectRouter);
 app.use('/tutor', tutorRouter);
+app.use('/lessons', lessonRouter);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {

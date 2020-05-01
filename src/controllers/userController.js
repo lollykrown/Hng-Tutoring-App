@@ -3,30 +3,37 @@ const jwt = require("jsonwebtoken");
 const chalk = require("chalk");
 const bcrypt = require("bcryptjs");
 const User = require('../models/users');
+const Category = require('../models/category');
 
 function userController() {
   function signUp(req, res) {
     (async function auth() {
       try {
-        const { email, password, username, cat } = req.body;
-        const category = cat.toLowerCase();
-        if (!email || !password || !category) {
+        const { email, password, username, identifier } = req.body;
+        if (!email || !password || !identifier) {
           res.status(400).send({
             status: false,
             message: 'All fields are required'
           });
           return;
         }
+        const category = identifier.toLowerCase();
+
         const user = await User.findOne({ email }).exec();
         if (user) {
           return res.status(423)
             .send({ status: false, message: 'This email already exists' })
         }
-
         bcrypt.hash(password, 12)
           .then(hashedPassword => {
             const user = new User({ email, hashedPassword, username, category });
-            user.save();
+            user.save()
+            .then(docx => {
+              Category.findOneAndUpdate({category}, {$push: {users: docx._id}}, {useFindAndModify: false, new: true})
+              .exec( newUser => {
+                debug(newUser);
+              });
+            });
           })
           .then(() => {
             res.status(200).json({
@@ -36,6 +43,12 @@ function userController() {
             });
           })
           .catch(err => console.log(err));
+
+          const us = await findOne({email});
+          debug(us)
+          const newUser = await Category.findOneAndUpdate({category}, {$push: {users: us._id}}, {useFindAndModify: false, new: true}).exec()
+          debug(chalk.grey(newUser));
+
       } catch (err) {
         console.log(err.stack);
       }

@@ -1,27 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const lessonSchema = new mongoose.Schema({
+const lessonSchema = new Schema({
 	subject: {
     type: String,
     required: true
   },
 	time: {
     type: String,
-    default: []
   },
-    tutors: {
-    type: Schema.Types.ObjectId,
-    ref: 'Tutor'
+  tutorName: {
+    type: String,
+    required: true
   },
   level: {
     type: String,
     enum: ['primary', 'jss', 'sss']
   },
-  // category: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'Category'
-  // }
-});
+}, {timestamps: true});
 
-module.exports = mongoose.model( 'Subject', subjectSchema )
+module.exports = mongoose.model( 'Lesson', lessonSchema );

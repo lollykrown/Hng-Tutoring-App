@@ -1,9 +1,9 @@
 const express = require('express');
 const Tutor = require('../models/tutor');
 const Subject = require('../models/subject');
+const Category = require('../models/category');
 const tutorRouter = express.Router();
 const debug = require('debug')('app:tutorRoutes');
-const mongoose = require('mongoose');
 const chalk = require('chalk');
 
 function router() {
@@ -15,7 +15,9 @@ function router() {
           debug(name, subject);
           const tutor = new Tutor({ name, level, classes, subject });
           const tu = await tutor.save();
-          debug(chalk.red(tu));
+          const newtutor = await Category.findOneAndUpdate({category: 'tutor'}, {$push: {tutors: tu._id}}, {useFindAndModify: false, new: true});
+
+          debug(chalk.red(tu, newtutor));
 
           let subj = [];
           let addedSubject;
@@ -24,9 +26,9 @@ function router() {
             subj.push(
               { subject: s, 
                 tutors: [tu._id],
-                level: level }
+                category: level }
                 );
-          addedSubject = await Subject.findOneAndUpdate({subject: s}, {$push: {tutors: tu._id}}, {useFindAndModify: false, new: true}).exec()
+          let addedSubject = await Subject.findOneAndUpdate({subject: s}, {$push: {tutors: tu._id}}, {useFindAndModify: false, new: true}).exec()
           debug(chalk.grey(addedSubject));
           }
 
@@ -56,11 +58,14 @@ function router() {
         }
       }());
     });
-    tutorRouter.route('/:tut')
+    tutorRouter.route('/first')
     .get((req, res) => {
-      (async function get() {
+      (async function searchTutorByFirstName() {
         try {
-          Tutor.find({ name: req.params.tutor}).populate("subjects").exec()
+          const str = req.query.q;
+          const q = str[0].toUpperCase() +  str.slice(1); ;
+          debug(q);
+          Tutor.find({ name: {$regex: '^' + q, $options: 'i'}}).exec()
             .then(docs => res.json(docs))
             .catch(err => console.log(`Oops! ${err}`));
         } catch (err) {

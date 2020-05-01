@@ -4,15 +4,23 @@ const Schema = mongoose.Schema;
 const categorySchema = new Schema({
 	category: {
     type: String,
-    enum: ['Student', 'Tutor']
+    enum: ['student', 'tutor']
   },
-  user: [{
+  users: [{
     type: Schema.Types.ObjectId,
     ref: 'Users'
   }],
   subjects: [{
     type: Schema.Types.ObjectId,
     ref: 'Subject'
+  }],
+  tutors: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Tutor'
+  }],
+  lessons: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Lesson'
   }]
 });
 
