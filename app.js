@@ -25,9 +25,9 @@ const tutorRouter = require('./src/routes/tutorRoutes')();
 const lessonRouter = require('./src/routes/lessonRoutes')();
 
 app.use('/', authRouter);
-app.use('/category', categoryRouter);
+app.use('/categories', categoryRouter);
 app.use('/subjects', subjectRouter);
-app.use('/tutor', tutorRouter);
+app.use('/tutors', tutorRouter);
 app.use('/lessons', lessonRouter);
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -46,7 +46,8 @@ db.once('open', function () {
     // })();
 });
 
-app.get('/', (req, res) => {
+const auth = require('./src/utils/auth')
+app.get('/', auth, (req, res) => {
   res.send('home');
 //   (async function mongo() {
 //     try {

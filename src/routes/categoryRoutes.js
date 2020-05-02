@@ -32,17 +32,17 @@ function router() {
         }
       }());
     });
-    categoryRouter.route('/:id')
+    categoryRouter.route('/pop')
     .get((req, res) => {
-      // (async function get() {
-      //   try {
-      //     Category.findById({ _id: req.params.id}).exec()
-      //       .then(docs => res.json(docs))
-      //       .catch(err => console.log(`Oops! ${err}`));
-      //   } catch (err) {
-      //     console.log(err.stack);
-      //   }
-      // }());
+      (async function get() {
+        try {
+          Category.find({ category: 'tutor'}).populate('users subjects tutors lessons').exec()
+            .then(docs => res.json(docs))
+            .catch(err => console.log(`Oops! ${err}`));
+        } catch (err) {
+          console.log(err.stack);
+        }
+      }());
     });
   return categoryRouter;
 }

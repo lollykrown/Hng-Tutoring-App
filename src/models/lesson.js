@@ -9,14 +9,17 @@ const lessonSchema = new Schema({
 	time: {
     type: String,
   },
-  tutorName: {
+  tutor: {
     type: String,
-    required: true
+    //required: true
   },
   level: {
     type: String,
     enum: ['primary', 'jss', 'sss']
   },
+  date: {
+    type: Date
+  }
 }, {timestamps: true});
 
 module.exports = mongoose.model( 'Lesson', lessonSchema );
