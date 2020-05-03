@@ -19,6 +19,6 @@
   "production": {
       "config_id": "production",
       "node_port": 8080,
-      "database_url": "mongodb+srv://kay:ololade@tourism-ajbdg.mongodb.net/tourism?retryWrites=true&w=majority"
+      "database_url": "mongodb+srv://kay:ololade@tourism-ajbdg.mongodb.net/test?retryWrites=true&w=majority"
   }
 }
