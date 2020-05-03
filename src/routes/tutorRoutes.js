@@ -24,18 +24,18 @@ function router() {
       (async function pos() {
         try {
           let { name, level, classes, subject } = req.body;
-          function toCaps(num){
+          function toCaps(num) {
             let arr = [];
-            for(let n of num.split(' ')) {
-                n[0].toUpperCase() +  n.slice(1); 
-                arr
+            for (let n of num.split(' ')) {
+              n[0].toUpperCase() + n.slice(1);
+              arr
             }
             return arr.join('');
           }
           //name = toCaps(name);
           debug(name, subject);
           const tutor = new Tutor({ name, level, classes, subject });
-          const exist = await Tutor.exists({name}); 
+          const exist = await Tutor.exists({ name });
           debug(exist);
           if (exist) {
             return res.status(423)
@@ -43,7 +43,10 @@ function router() {
           }
           const tu = await tutor.save();
           const newtutor = await Category.findOneAndUpdate({ category: 'student' }, { $push: { tutors: tu._id } }, { useFindAndModify: false, new: true });
-
+          
+          if (req.user.category === 'tutor') {
+            const newSub = await User.findByIdAndUpdate({ _id: req.user.category }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true });
+          }
           debug(chalk.red(tu, newtutor));
 
           //let subj = [];
@@ -57,7 +60,7 @@ function router() {
                 category: level
               }
             );
-            const addedSubject = await Subject.findOne({subject: s}).exec();
+            const addedSubject = await Subject.findOne({ subject: s }).exec();
             debug(addedSubject);
             if (!addedSubject) {
               const sub = await subj.save();
@@ -89,12 +92,35 @@ function router() {
         }
       }());
     });
-    tutorRouter.route('/:id')
+  tutorRouter.route('/subject')
+    //see all subject (only tutors)
+    .get(auth, (req, res) => {
+      if (!req.user.category === 'tutor') {
+        return res.status(423)
+          .send({ status: false, message: `you are not a tutor` });
+      }
+      (async function getAll() {
+        try {
+          const exists = await Tutor.exists({ name: req.user.username });
+          if (!exists) {
+            return res.status(423)
+              .send({ status: false, message: `you have not registered to take any course` });
+          }
+          Tutor.find({ name: req.user.username }).select('subject').exec()
+            .then(docs => res.json(docs))
+            .catch(err => console.log(`Oops! ${err}`));
+        } catch (err) {
+          console.log(err.stack);
+        }
+      }());
+
+    });
+  tutorRouter.route('/:id')
     //get a tutor by id (only admin)
     .get(admin, (req, res) => {
       (async function getTutorById() {
         try {
-          Tutor.find({_id: req.params.id}).select('name').exec()
+          Tutor.find({ _id: req.params.id }).select('name').exec()
             .then(docs => res.json(docs))
             .catch(err => console.log(`Oops! ${err}`));
         } catch (err) {
@@ -106,7 +132,7 @@ function router() {
     .delete(admin, (req, res) => {
       (async function deleteTutorById() {
         try {
-          Tutor.findByIdAndDelete({_id: req.params.id}).exec()
+          Tutor.findByIdAndDelete({ _id: req.params.id }).exec()
             .then(docs => res.json({
               status: true,
               message: `${docs.name} deleted`,
@@ -119,24 +145,24 @@ function router() {
     });
   // search for tutors by first name, sorted alphabetically in ascending order.
   tutorRouter.route('/search')
-  .get(auth, (req, res) => {
-    if (req.user.category == 'student' || req.user.isAdmin === true){
-      (async function searchTutorByFirstName() {
-        try {
-          debug(req.user)
-          const str = req.query.q;
-          const q = str[0].toUpperCase() + str.slice(1);;
-          debug(q);
-          Tutor.find({ name: { $regex: '^' + q, $options: 'i' } }, null, { sort: { name: 1 } }).select("-_id -lessons -level").exec()
-            .then(docs => res.json(docs))
-            .catch(err => console.log(`Oops! ${err}`));
-        } catch (err) {
-          console.log(err.stack);
-        }
-      }());
-    } else {
-      res.status(401).send('Access denied. You are not a Student or Admin.');
-    }
+    .get(auth, (req, res) => {
+      if (req.user.category == 'student' || req.user.isAdmin === true) {
+        (async function searchTutorByFirstName() {
+          try {
+            debug(req.user)
+            const str = req.query.q;
+            const q = str[0].toUpperCase() + str.slice(1);;
+            debug(q);
+            Tutor.find({ name: { $regex: '^' + q, $options: 'i' } }, null, { sort: { name: 1 } }).select("-_id -lessons -level").exec()
+              .then(docs => res.json(docs))
+              .catch(err => console.log(`Oops! ${err}`));
+          } catch (err) {
+            console.log(err.stack);
+          }
+        }());
+      } else {
+        res.status(401).send('Access denied. You are not a Student or Admin.');
+      }
     });
   return tutorRouter;
 }

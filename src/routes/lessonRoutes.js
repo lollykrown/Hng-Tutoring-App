@@ -2,10 +2,12 @@ const express = require('express');
 const Category = require('../models/category');
 const Lesson = require('../models/lesson');
 const Tutor = require('../models/tutor');
+const User = require('../models/users');
 const lessonRouter = express.Router();
 const debug = require('debug')('app:lessonRoutes');
 const chalk = require('chalk');
 const admin = require('../utils/admin');
+const auth = require('../utils/auth');
 
 function router() {
   lessonRouter.route('/')
@@ -23,8 +25,11 @@ function router() {
           if (!newLesson2) {
             const newTutor = new Tutor({ name: tutor, level, subject, lessons: lu._id })
             const newe = await newTutor.save();
+            const newSub = await User.findOneAndUpdate({ name: tutor }, { $push: { subjects: subject, lessons: newe._id } }, { useFindAndModify: false, new: true });
+            debug(newSub);
             debug(newe);
           }
+
           debug(chalk.red(newLesson));
           debug(chalk.blue(newLesson2));
 
@@ -49,6 +54,34 @@ function router() {
         }
       }());
     });
+  lessonRouter.route('/student')
+    //book lesson as a student (only student)
+    .post(auth, (req, res) => {
+      if (req.user.category === 'student') {
+        (async function bookLessonSudent() {
+          try {
+            let { subject } = req.body;
+
+            debug(subject);
+            const lesson = await Lesson.findOne({ subject }).exec();
+            if (!lesson) {
+              return res.status(423)
+                .send({ status: false, message: `no lesson on ${subject} yet` });
+            }
+            const newLesson = await User.findOneAndUpdate({ _id: req.user.id }, { $push: { lessons: lesson._id } }, { useFindAndModify: false, new: true });
+
+            res.status(200).json({
+              status: true,
+              message: 'You have successfully booked a Lesson'
+            })
+          } catch (err) {
+            console.log(err.stack);
+          }
+        }());
+      } else {
+        res.status(401).send('Access denied. You are not a Student.');
+      }
+    })
   // get a lesson by id (only admin)
   lessonRouter.route('/:id')
     .get(admin, (req, res) => {

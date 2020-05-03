@@ -32,7 +32,7 @@ function router() {
         }
       }());
     });
-    categoryRouter.route('/pop')
+  categoryRouter.route('/pop')
     .get((req, res) => {
       (async function get() {
         try {

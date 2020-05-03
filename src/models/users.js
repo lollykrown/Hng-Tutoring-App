@@ -11,7 +11,7 @@ const usersSchema = new Schema({
     type: String,
     required: true
   },
-  username: {
+  name: {
     type: String,
   },
   category: {
@@ -23,7 +23,14 @@ const usersSchema = new Schema({
   isAdmin: {
     type: Boolean,
     default: false
-  }
+  },
+  subjects: {
+    type: Array
+  },
+  lessons: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Tutor'
+  }],
 }, {timestamps: true});
 
 usersSchema.methods.generateAuthToken = function() { 
