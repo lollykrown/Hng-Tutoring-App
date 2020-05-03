@@ -38,7 +38,7 @@ db.once('open', function () {
 });
 
 app.get('/', (req, res) => {
-  res.send('go to path /signup to register and start');
+  res.send(`Welcome to the Tutoring api, please visit path '/signup' to register and start`);
 });
 
 app.listen(process.env.PORT || global.gConfig.node_port, function () {
