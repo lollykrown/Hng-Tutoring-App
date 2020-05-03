@@ -41,6 +41,6 @@ app.get('/', (req, res) => {
   res.sendStatus(200).json({ message: 'go to path /signup to register and start' });
 });
 
-app.listen(global.gConfig.node_port, function () {
+app.listen(process.env.PORT || global.gConfig.node_port, function () {
   console.log(`${global.gConfig.app_name} Listening on port ${global.gConfig.node_port}...`)
 })
