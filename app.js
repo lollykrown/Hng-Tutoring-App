@@ -26,7 +26,7 @@ const subjectRouter = require('./src/routes/subjectRoutes')();
 const tutorRouter = require('./src/routes/tutorRoutes')();
 const lessonRouter = require('./src/routes/lessonRoutes')();
 
-app.use('/', authRouter);
+app.use('/v1', authRouter);
 app.use('/v1/categories', categoryRouter);
 app.use('/v1/subjects', subjectRouter);
 app.use('/v1/tutors', tutorRouter);
