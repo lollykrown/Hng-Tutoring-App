@@ -5,20 +5,20 @@
       "app_desc": "Tutoring app is a teachers, students and admin app",
       "node_port": 4000,
       "json_indentation": 2,
-      "database_url": "mongodb://localhost:27017/tourist?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+      "database_url": "mongodb://localhost:27017/tutoring?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
   },
   "testing": {
       "config_id": "testing",
-      "database_url": "mongodb://localhost:27017/tourist?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+      "database_url": "mongodb://localhost:27017/tutoring?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
   },
   "staging": {
       "config_id": "staging",
       "node_port": 8080,
-      "database_url": "mongodb://localhost:27017/tourist?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
+      "database_url": "mongodb://localhost:27017/tutoring?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
   },
   "production": {
       "config_id": "production",
       "node_port": 8080,
-      "database_url": "mongodb+srv://kay:ololade@tourism-ajbdg.mongodb.net/tourism?retryWrites=true&w=majority"
+      "database_url": "mongodb+srv://kay:pass@tutorin-n551k.mongodb.net/tutoring?retryWrites=true&w=majority"
   }
 }
