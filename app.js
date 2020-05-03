@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
-  res.sendStatus(200).json({ message: 'go to path /v1/signup to start' });
+  res.sendStatus(200).json({ message: 'go to path /signup to register and start' });
 
 });
 
