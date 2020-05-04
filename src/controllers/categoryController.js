@@ -1,6 +1,4 @@
 const debug = require('debug')('app:categoryController');
-const chalk = require("chalk");
-const User = require('../models/users');
 const Category = require('../models/category');
 
 function categoryController() {
@@ -33,7 +31,6 @@ function categoryController() {
     }());
   };
 
-  
   function populateCategories(req, res) {
     (async function get() {
       try {
@@ -49,7 +46,7 @@ function categoryController() {
   return {
     postCategories,
     getCategories,
-    becomeAdmin
+    populateCategories
   };
 }
 
