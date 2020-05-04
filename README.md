@@ -1,6 +1,6 @@
 # Tutoring-App
 <hr>
-Tutoring App Tutoring an app with endpoints for registered teachers, students and admins. Students and Tutors can register and book lessons and create subjects/book lessons respectively<br>
+Tutoring App is an app with endpoints for registered teachers, students and admins. Students and Tutors can register and book lessons and create subjects/book lessons respectively<br>
 Version 1.0.0 <br>
 [ Base URL: <a href="https://kay-tutoring-app.herokuapp.com">https://kay-tutoring-app.herokuapp.com/v1</a> ] <br>
 
