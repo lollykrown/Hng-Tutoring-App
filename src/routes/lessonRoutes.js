@@ -13,7 +13,7 @@ function router() {
   lessonRouter.route('/')
     //book lesson (only admin)
     .post(admin, (req, res) => {
-      (async function pos() {
+      (async function bookLesson() {
         try {
           let { subject, time, tutor, level } = req.body;
 
@@ -58,7 +58,7 @@ function router() {
     //book lesson as a student (only student)
     .post(auth, (req, res) => {
       if (req.user.category === 'student') {
-        (async function bookLessonSudent() {
+        (async function bookLessonStudent() {
           try {
             let { subject } = req.body;
 

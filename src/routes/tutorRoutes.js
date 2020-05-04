@@ -21,7 +21,7 @@ function router() {
   };
   tutorRouter.route('/')
     .post(auth, (req, res) => {
-      (async function pos() {
+      (async function addTutor() {
         try {
           let { name, level, classes, subject } = req.body;
           function toCaps(num) {
@@ -82,7 +82,7 @@ function router() {
     })
     //retrieve all tutors (only admin)
     .get(admin, (req, res) => {
-      (async function getAll() {
+      (async function getAllTutors() {
         try {
           Tutor.find({}).select('name').exec()
             .then(docs => res.json(docs))

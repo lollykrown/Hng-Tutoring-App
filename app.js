@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 // const cors = require('cors')
 
-process.env.NODE_ENV = 'production';
+//process.env.NODE_ENV = 'production';
 
 const app = express();
 require('./config/config.js');
@@ -38,7 +38,9 @@ db.once('open', function () {
 });
 
 app.get('/', (req, res) => {
-  res.send(`Welcome to the Tutoring api, please visit path '/signup' to register and start`);
+  res.send(`
+    <h2>Welcome to the Tutoring api, please visit path '/signup' to register and start</h2>
+  `);
 });
 
 app.listen(process.env.PORT || global.gConfig.node_port, function () {

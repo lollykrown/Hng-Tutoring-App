@@ -298,8 +298,6 @@ function router() {
     // delete a subject in a category by id (only admin)
     .delete(admin, (req, res) => {
       (async function deleteSubjectByCategoryById() {
-        const { subject } = req.body;
-        debug(subject);
         try {
           Subject.findByIdAndDelete({ _id: req.params.id }).exec()
             .then(docs => res.status(200).json({

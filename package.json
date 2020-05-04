@@ -1,7 +1,7 @@
 {
   "name": "tutoring-app",
   "version": "1.0.0",
-  "description": "a Tutoring App",
+  "description": "a Tutoring App Tutoring an app with endpoints for registered teachers, students and admins",
   "main": "app.js",
   "scripts": {
     "start": "set DEBUG=app,app:* & nodemon app.js",
