@@ -8,7 +8,7 @@ Version 1.0.0 <br>
 
 Every routes require you to sign in as a tutor or student and you will be required to include this header "x-access-token: (access token generated after signing in)"
 
-<a href="doc/index.html">View Endpoints documentation</a>
+<a href="src/doc/index.html">View Endpoints documentation</a>
 
 
 
