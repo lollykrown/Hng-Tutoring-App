@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const usersSchema = new Schema({
 	email: {
     type: String,
+    unique: true,
     required: true
   },
 	hashedPassword: {
@@ -33,8 +34,16 @@ const usersSchema = new Schema({
   }],
 }, {timestamps: true});
 
+usersSchema.post('save', function(error, doc, next) {
+  if (error.name === 'MongoError' && error.code === 11000) {
+    next(new Error('There was a duplicate key error'));
+  } else {
+    next();
+  }
+});
+
 usersSchema.methods.generateAuthToken = function() { 
-  const token = jwt.sign({ category: user.category, email: user.email, isAdmin: this.isAdmin }, 'mysecretkey', { expiresIn: "1hr" });
+  const token = jwt.sign({ id: this._id, category: this.category, email: this.email, isAdmin: this.isAdmin }, 'mysecretkey', { expiresIn: "1hr" });
   return token;
 }
 

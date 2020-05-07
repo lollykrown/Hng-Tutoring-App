@@ -66,17 +66,19 @@ function userController() {
           if (!valid) {
             return res.status(403).send("Incorrect username or password, please review details and try again");
           }
-          //const token = User.generateAuthToken();
+          const token = user.generateAuthToken();
+          debug(chalk.yellow(token))
 
-          const token = jwt.sign(
-            { id: user._id, email: user.email, category: user.category, isAdmin: user.isAdmin },
-            "mysecretkey",
-            { expiresIn: 60 * 60 }
-          );
+          // const token = jwt.sign(
+          //   { id: user._id, email: user.email, category: user.category, isAdmin: user.isAdmin },
+          //   "mysecretkey",
+          //   { expiresIn: 60 * 60 }
+          // );
           debug(`Time: ${Date(Date.now()).toString()}`);
           res.header("x-auth-token", token).send({
             status: true,
             id: user._id,
+            password: user.category,
             message: 'You are now logged in'
           });
         })

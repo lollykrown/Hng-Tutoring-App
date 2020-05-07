@@ -28,10 +28,10 @@ function tutorController() {
             .send({ status: false, message: `${name} already exists` })
         }
         const tu = await tutor.save();
-        const newtutor = await Category.findOneAndUpdate({ category: 'student' }, { $push: { tutors: tu._id } }, { useFindAndModify: false, new: true });
+        const newtutor = await Category.findOneAndUpdate({ category: 'student' }, { $push: { tutors: tu._id } }, { new: true });
         
         if (req.user.category === 'tutor') {
-          const newSub = await User.findByIdAndUpdate({ _id: req.user.category }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true });
+          const newSub = await User.findByIdAndUpdate({ _id: req.user.category }, { $push: { subjects: subject } }, { new: true });
         }
         debug(chalk.red(tu, newtutor));
 
@@ -51,8 +51,8 @@ function tutorController() {
           if (!addedSubject) {
             const sub = await subj.save();
             debug(chalk.blue(sub));
-            let newSub = await Category.findOneAndUpdate({ category: 'student' }, { $push: { subjects: sub._id } }, { useFindAndModify: false, new: true }).exec();
-            let newSub1 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: sub._id } }, { useFindAndModify: false, new: true }).exec();
+            let newSub = await Category.findOneAndUpdate({ category: 'student' }, { $push: { subjects: sub._id } }, { new: true }).exec();
+            let newSub1 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: sub._id } }, { new: true }).exec();
             debug(chalk.grey(newSub, newSub1));
           }
         }
@@ -98,7 +98,6 @@ function tutorController() {
         console.log(err.stack);
       }
     }());
-
   };
 
   function getTutorById(req, res) {

@@ -55,7 +55,6 @@ function subjectController() {
             return;
           }
           const category = req.params.category;
-
           debug(chalk.blue(category))
           const sub = new Subject({ subject, category });
 
@@ -216,7 +215,7 @@ function subjectController() {
             debug(newArr)
             //user.subjects = newArr;
             //const updated = user.save();
-            const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: newArr}}, { useFindAndModify: false, new: true })
+            const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: newArr}}, { new: true })
             res.status(200).json(updated);
         } catch (err) {
           console.log(err.stack);
@@ -246,7 +245,7 @@ function subjectController() {
         const del = deleteArrItem(subject, us.subjects);
         debug(chalk.yellow(del));
 
-        const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: del}}, { useFindAndModify: false, new: true })
+        const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: del}}, { new: true })
          res.status(200).json({
             status: true,
             message: `${subject} has been succesfully deleted`,
@@ -275,7 +274,7 @@ function subjectController() {
       const { subject } = req.body;
       debug(subject);
       try {
-        Subject.findByIdAndUpdate({ _id: req.params.id }, { $set: { subject } }, { useFindAndModify: false, new: true }).exec()
+        Subject.findByIdAndUpdate({ _id: req.params.id }, { $set: { subject } }, { new: true }).exec()
           .then(docs => res.status(200).json(docs))
           .catch(err => console.log(`Oops! ${err.stack}`));
       } catch (err) {

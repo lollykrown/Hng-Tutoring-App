@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const express = require('express');
-const debug = require('debug')('app');
 const morgan = require('morgan'); //logger
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -12,7 +11,14 @@ const path = require('path');
 const app = express();
 require('./config/config.js');
 
-mongoose.connect(global.gConfig.database_url, { useNewUrlParser: true, useUnifiedTopology: true });
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  //autoIndex: false, // Don't build indexes
+};
+mongoose.connect(global.gConfig.database_url, options);
 const db = mongoose.connection;
 
 app.use(bodyParser.json());

@@ -14,12 +14,12 @@ function lessonController() {
           debug(subject, tutor);
           const lesson = new Lesson({ subject, time, tutor: tutor, level });
           const lu = await lesson.save();
-          const newLesson = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { lessons: lu._id } }, { useFindAndModify: false, new: true });
-          const newLesson2 = await Tutor.findOneAndUpdate({ name: tutor }, { $push: { lessons: lu._id } }, { useFindAndModify: false, new: true });
+          const newLesson = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { lessons: lu._id } }, { new: true });
+          const newLesson2 = await Tutor.findOneAndUpdate({ name: tutor }, { $push: { lessons: lu._id } }, { new: true });
           if (!newLesson2) {
             const newTutor = new Tutor({ name: tutor, level, subject, lessons: lu._id })
             const newe = await newTutor.save();
-            const newSub = await User.findOneAndUpdate({ name: tutor }, { $push: { subjects: subject, lessons: newe._id } }, { useFindAndModify: false, new: true });
+            const newSub = await User.findOneAndUpdate({ name: tutor }, { $push: { subjects: subject, lessons: newe._id } }, { new: true });
             debug(newSub);
             debug(newe);
           }
@@ -61,7 +61,7 @@ function lessonController() {
             return res.status(423)
               .send({ status: false, message: `no lesson on ${subject} yet` });
           }
-          const newLesson = await User.findOneAndUpdate({ _id: req.user.id }, { $push: { lessons: lesson._id } }, { useFindAndModify: false, new: true });
+          const newLesson = await User.findOneAndUpdate({ _id: req.user.id }, { $push: { lessons: lesson._id } }, { new: true });
 
           res.status(200).json({
             status: true,
@@ -92,7 +92,7 @@ function lessonController() {
     (async function update() {
       let { subject, time, tutor, level } = req.body;
       try {
-        Lesson.findByIdAndUpdate({ _id: req.params.id }, { $set: { subject, time, tutor, level } }, { useFindAndModify: false, new: true }).exec()
+        Lesson.findByIdAndUpdate({ _id: req.params.id }, { $set: { subject, time, tutor, level } }, { new: true }).exec()
           .then(docs => res.status(200).json(docs))
           .catch(err => console.log(`Oops! ${err.stack}`));
       } catch (err) {
