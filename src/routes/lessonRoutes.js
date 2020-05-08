@@ -3,6 +3,7 @@ const lessonRouter = express.Router();
 const admin = require('../utils/admin');
 const auth = require('../utils/auth');
 const lessonController = require('../controllers/lessonController');
+const cacheMiddleware = require('../utils/cacheMiddleware');
 
 function router() {
   const { bookLesson, getAll, bookLessonStudent, getLessonById, updateLessonById, deleteLessonById } = lessonController();
@@ -11,13 +12,13 @@ function router() {
     //book lesson (only admin)
     .post(admin, bookLesson)
     // retrieve all lessons (only admin)
-    .get(admin, getAll);
+    .get(admin, cacheMiddleware, getAll);
   lessonRouter.route('/student')
     //book lesson as a student (only student)
     .post(auth, bookLessonStudent)
   // get a lesson by id (only admin)
   lessonRouter.route('/:id')
-    .get(admin, getLessonById)
+    .get(admin, cacheMiddleware, getLessonById)
     // update a lesson by id (only admin)
     .patch(admin, updateLessonById)
     // delete a lesson by id (only admin)

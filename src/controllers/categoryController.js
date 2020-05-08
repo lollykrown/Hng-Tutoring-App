@@ -34,7 +34,7 @@ function categoryController() {
   function populateCategories(req, res) {
     (async function get() {
       try {
-        Category.find({ category: 'tutor'}).populate('users subjects tutors lessons').exec()
+        Category.find({ category: 'tutor' }).populate('users subjects tutors lessons').exec()
           .then(docs => res.json(docs))
           .catch(err => console.log(`Oops! ${err}`));
       } catch (err) {
