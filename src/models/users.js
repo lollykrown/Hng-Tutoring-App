@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const Schema = mongoose.Schema
 
 const usersSchema = new Schema({
 	email: {
@@ -32,19 +32,19 @@ const usersSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Tutor'
   }],
-}, {timestamps: true});
+}, {timestamps: true})
 
 usersSchema.post('save', function(error, doc, next) {
   if (error.name === 'MongoError' && error.code === 11000) {
-    next(new Error('There was a duplicate key error'));
+    next(new Error('There was a duplicate key error'))
   } else {
-    next();
+    next()
   }
-});
+})
 
 usersSchema.methods.generateAuthToken = function() { 
-  const token = jwt.sign({ id: this._id, category: this.category, email: this.email, isAdmin: this.isAdmin }, 'mysecretkey', { expiresIn: "1hr" });
-  return token;
+  const token = jwt.sign({ id: this._id, category: this.category, email: this.email, isAdmin: this.isAdmin }, 'mysecretkey', { expiresIn: "1hr" })
+  return token
 }
 
 module.exports = mongoose.model( 'Users', usersSchema )

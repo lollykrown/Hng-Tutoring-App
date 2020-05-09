@@ -1,66 +1,66 @@
-const debug = require('debug')('app:userController');
-const jwt = require("jsonwebtoken");
-const chalk = require("chalk");
-const bcrypt = require("bcryptjs");
-const User = require('../models/users');
-const Category = require('../models/category');
+const debug = require('debug')('app:userController')
+const jwt = require("jsonwebtoken")
+const chalk = require("chalk")
+const bcrypt = require("bcryptjs")
+const User = require('../models/users')
+const Category = require('../models/category')
 
 function userController() {
   function signUp(req, res) {
     (async function auth() {
       try {
-        const { email, password, username, identifier } = req.body;
+        const { email, password, username, identifier } = req.body
         if (!email || !password || !identifier) {
           res.status(400).send({
             status: false,
             message: 'All fields are required'
-          });
-          return;
+          })
+          return
         }
-        const category = identifier.toLowerCase();
-        let userId = "";
-        const user = await User.findOne({ email }).exec();
+        const category = identifier.toLowerCase()
+        let userId = ""
+        const user = await User.findOne({ email }).exec()
         if (user) {
           return res.status(423)
             .send({ status: false, message: 'This email already exists' })
         }
         bcrypt.hash(password, 10)
           .then(hashedPassword => {
-            const user = new User({ email, hashedPassword, username, category });
+            const user = new User({ email, hashedPassword, username, category })
             user.save()
               .then(docx => {
-                userId = docx._id;
-                debug(chalk.red(docx));
+                userId = docx._id
+                debug(chalk.red(docx))
                 Category.findOneAndUpdate({category}, {$push: {users: docx._id}}, {useFindAndModify: false, new: true})
                 .exec( newUser => {
-                  debug(chalk.grey(newUser));
-                });
-              });
+                  debug(chalk.grey(newUser))
+                })
+              })
           })
           .then(() => {
             res.status(200).json({
               status: true,
               message: 'You have been successfully registered, Welcome to the Tutoring App',
               email: email
-            });
+            })
           })
-          .catch(err => console.log(err));
+          .catch(err => debug(err))
 
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
   function signIn(req, res) {
     (async function auth() {
       try {
-        const { email, password } = req.body;
-        debug(chalk.blue(email, password));
-        const user = await User.findOne({ email }).exec();
+        const { email, password } = req.body
+        debug(chalk.blue(email, password))
+        const user = await User.findOne({ email }).exec()
         if (!user) {
           return res
             .status(404)
-            .send("User not found, please provide valid credentials");
+            .send("User not found, please provide valid credentials")
         }
         bcrypt.compare(password, user.hashedPassword).then(valid => {
           if (!valid) {
@@ -82,15 +82,15 @@ function userController() {
             message: 'You are now logged in'
           });
         })
-          .catch(err => console.log(err));
+          .catch(err => debug(err));
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
   function becomeAdmin(req, res) {
     if (!req.user){
-      return res.status(401).send('You have to login first');
+      return res.status(401).send('You have to login first')
     }
     if (req.user.category === 'tutor') {
       (async function requestAdminPriviledges() {
@@ -100,20 +100,20 @@ function userController() {
               status: true,
               message: `Congrats ${docs.username}! You are now an admin. Login again to access admin benefits`
             }))
-            .catch(err => console.log(`Oops! ${err.stack}`));
+            .catch(err => debug(`Oops! ${err.stack}`))
         } catch (err) {
-          console.log(err.stack);
+          debug(err.stack)
         }
       }());
     } else {
-      res.status(401).send('Request denied. You have to be a Tutor and a Power User');
+      res.status(401).send('Request denied. You have to be a Tutor and a Power User')
     }
   }
   return {
     signUp,
     signIn,
     becomeAdmin
-  };
+  }
 }
 
-module.exports = userController;
+module.exports = userController

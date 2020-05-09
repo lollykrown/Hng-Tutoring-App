@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const tutorSchema = new Schema({
 	name: {
@@ -20,6 +20,6 @@ const tutorSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Tutor'
   }],
-});
+})
 
 module.exports = mongoose.model( 'Tutor', tutorSchema )
