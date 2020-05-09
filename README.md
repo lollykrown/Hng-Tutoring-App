@@ -12,6 +12,9 @@ A typical endpoint is like this <strong> https://kay-tutoring-app.herokuapp.com/
 <hr>
 <a href="https://kay-tutoring-app.herokuapp.com/" target="_blank">View Endpoints documentation</a><br>
 Documentation is hosted on <a href="https://app.swaggerhub.com/apis/lollykrown/Tutoring-App-API/1.0.0" target="_blank">swaggerHub</a>
+<br>
+<hr>
+The refactoring branch has the latest commits which are basically taking off some boiler plate codes and improving perfomance among others
 
 
 
