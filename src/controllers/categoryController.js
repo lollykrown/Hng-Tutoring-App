@@ -9,7 +9,7 @@ function categoryController() {
         debug(category)
         const cat = new Category({ category })
         cat.save()
-        res.status(200).json({
+        res.status(201).json({
           status: true,
           message: `One new ${cat.category} saved`,
         })
@@ -23,7 +23,7 @@ function categoryController() {
     (async function get() {
       try {
         Category.find({}).exec()
-          .then(docs => res.json(docs))
+          .then(docs => res.status(200).json(docs))
           .catch(err => console.log(`Oops! ${err}`))
       } catch (err) {
         debug(err.stack)
@@ -35,7 +35,7 @@ function categoryController() {
     (async function get() {
       try {
         Category.find({ category: 'tutor' }).populate('users subjects tutors lessons').exec()
-          .then(docs => res.json(docs))
+          .then(docs => res.status(200).json(docs))
           .catch(err => console.log(`Oops! ${err}`));
       } catch (err) {
         console.log(err.stack);

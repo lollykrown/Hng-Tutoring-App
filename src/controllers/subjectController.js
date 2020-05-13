@@ -70,7 +70,7 @@ function subjectController() {
           const newSubject2 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true })
 
           debug(newSubject, newSubject2)
-          res.status(200).json({ status: true, message: 'Subject saved' })
+          res.status(204).json({ status: true, message: 'Subject saved' })
         } catch (err) {
           debug(err.stack);
         }
@@ -109,7 +109,7 @@ function subjectController() {
     (async function del() {
       try {
         Subject.deleteMany({ category: req.params.category }).exec()
-          .then(docs => res.status(200).json({
+          .then(docs => res.status(204).json({
             status: true,
             message: `category ${req.params.category} deleted`,
           }))
@@ -167,7 +167,7 @@ function subjectController() {
           const newSub = await User.findByIdAndUpdate({ _id: req.user.id }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true })
 
           debug(newSubject, newSubject2, newSub)
-          res.status(200).json({ status: true, message: `${subject} saved successfully` })
+          res.status(201).json({ status: true, message: `${subject} saved successfully` })
         } catch (err) {
           debug(err.stack)
         }
@@ -183,7 +183,7 @@ function subjectController() {
         try {
           User.findById({ _id: req.user.id }).select('subjects').exec()
             .then(docs =>
-              res.json(docs))
+              res.status(200).json(docs))
             .catch(err => debug(`Oops! ${err.stack}`))
         } catch (err) {
           debug(err.stack)
@@ -246,7 +246,7 @@ function subjectController() {
         debug(chalk.yellow(del))
 
         const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: del}}, { new: true })
-         res.status(200).json({
+         res.status(204).json({
             status: true,
             message: `${subject} has been succesfully deleted`,
           });
@@ -287,7 +287,7 @@ function subjectController() {
     (async function deleteSubjectByCategoryById() {
       try {
         Subject.findByIdAndDelete({ _id: req.params.id }).exec()
-          .then(docs => res.status(200).json({
+          .then(docs => res.status(204).json({
             status: true,
             message: `${docs.subject} deleted`,
           }))

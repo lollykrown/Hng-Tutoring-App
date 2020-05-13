@@ -56,7 +56,7 @@ function tutorController() {
           }
         }
 
-        res.status(200).json({
+        res.status(201).json({
           status: true,
           message: 'Tutor saved',
         })
@@ -70,7 +70,7 @@ function tutorController() {
     (async function getAll() {
       try {
         Tutor.find({}).select('name').exec()
-          .then(docs => res.json(docs))
+          .then(docs => res.status(200).json(docs))
           .catch(err => debug(`Oops! ${err}`))
       } catch (err) {
         debug(err.stack)
@@ -91,7 +91,7 @@ function tutorController() {
             .send({ status: false, message: `you have not registered to take any course` })
         }
         Tutor.find({ name: req.user.username }).select('subject').exec()
-          .then(docs => res.json(docs))
+          .then(docs => res.status(200).json(docs))
           .catch(err => debug(`Oops! ${err}`))
       } catch (err) {
         debug(err.stack)
@@ -103,7 +103,7 @@ function tutorController() {
     (async function getTutor() {
       try {
         Tutor.find({ _id: req.params.id }).select('name').exec()
-          .then(docs => res.json(docs))
+          .then(docs => res.status(200).json(docs))
           .catch(err => debug(`Oops! ${err}`))
       } catch (err) {
         debug(err.stack)
@@ -115,7 +115,7 @@ function tutorController() {
     (async function del() {
       try {
         Tutor.findByIdAndDelete({ _id: req.params.id }).exec()
-          .then(docs => res.json({
+          .then(docs => res.status(204).json({
             status: true,
             message: `${docs.name} deleted`,
           }))
@@ -135,7 +135,7 @@ function tutorController() {
           const q = str[0].toUpperCase() + str.slice(1)
           debug(q)
           Tutor.find({ name: { $regex: '^' + q, $options: 'i' } }, null, { sort: { name: 1 } }).select("-_id -lessons -level").exec()
-            .then(docs => res.json(docs))
+            .then(docs => res.status(200).json(docs))
             .catch(err => debug(`Oops! ${err}`))
         } catch (err) {
           debug(err.stack)

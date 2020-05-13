@@ -41,7 +41,7 @@ function lessonController() {
     (async function get() {
       try {
         Lesson.find({}).exec()
-          .then(docs => res.json(docs))
+          .then(docs => res.status(200).json(docs))
           .catch(err => debug(`Oops! ${err}`))
       } catch (err) {
         debug(err.stack)
@@ -63,7 +63,7 @@ function lessonController() {
           }
           const newLesson = await User.findOneAndUpdate({ _id: req.user.id }, { $push: { lessons: lesson._id } }, { new: true })
 
-          res.status(200).json({
+          res.status(204).json({
             status: true,
             message: 'You have successfully booked a Lesson'
           })
@@ -105,7 +105,7 @@ function lessonController() {
     (async function del() {
       try {
         Lesson.findByIdAndDelete({ _id: req.params.id }).exec()
-          .then(docs => res.status(200).json({
+          .then(docs => res.status(204).json({
             status: true,
             message: `${docs.subject} lesson by ${docs.tutor} deleted`,
           }))

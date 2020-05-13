@@ -38,7 +38,7 @@ function userController() {
               })
           })
           .then(() => {
-            res.status(200).json({
+            res.status(201).json({
               status: true,
               message: 'You have been successfully registered, Welcome to the Tutoring App',
               email: email

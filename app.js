@@ -4,10 +4,11 @@ const morgan = require('morgan') //logger
 const bodyParser = require('body-parser')
 const path = require('path')
 const debug = require('debug')('app:root')
+const helmet = require('helmet')
 
 // const cors = require('cors')
 
-//process.env.NODE_ENV = 'production'
+// process.env.NODE_ENV = 'production'
 
 const app = express();
 require('./config/config.js');
@@ -25,6 +26,7 @@ const db = mongoose.connection
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('tiny'))
+app.use(helmet())
 //app.use(cors())
 
 
@@ -52,6 +54,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname+'/src/doc/index.html'))
 })
 
-app.listen(process.env.PORT || global.gConfig.node_port, function () {
+app.listen(global.gConfig.node_port || process.env.PORT, function () {
   debug(`${global.gConfig.app_name} Listening on port ${global.gConfig.node_port}...`)
 })
