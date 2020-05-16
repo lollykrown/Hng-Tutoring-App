@@ -5,8 +5,8 @@ Version 1.0.0 <br>
 [ Base URL: <a href="https://kay-tutoring-app.herokuapp.com">https://kay-tutoring-app.herokuapp.com/v1</a> ] <br>
 
 <hr>
-Admin login details:<br>
-email: joe@yahoo.com<br.
+<strong>Admin login details</strong><br>
+email: joe@yahoo.com<br>.
 password: pass
 <hr>
 
