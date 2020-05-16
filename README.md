@@ -6,7 +6,7 @@ Version 1.0.0 <br>
 
 <hr>
 <strong>Admin login details</strong><br>
-email: joe@yahoo.com<br>.
+email: joe@yahoo.com<br>
 password: pass
 <hr>
 
