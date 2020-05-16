@@ -5,6 +5,10 @@ Version 1.0.0 <br>
 [ Base URL: <a href="https://kay-tutoring-app.herokuapp.com">https://kay-tutoring-app.herokuapp.com/v1</a> ] <br>
 
 <hr>
+Admin login details:<br>
+email: joe@yahoo.com<br.
+password: pass
+<hr>
 
 Every routes require you to sign in as a tutor or student and you will be required to include this header "x-access-token: (access token generated after signing in)"
 
