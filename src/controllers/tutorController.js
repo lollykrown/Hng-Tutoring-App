@@ -1,8 +1,10 @@
 const Tutor = require('../models/tutor')
 const Subject = require('../models/subject')
-const Category = require('../models/category')
+const Category = require('../models/users')
+const User = require('../models/category')
 const debug = require('debug')('app:tutorController')
 const chalk = require('chalk')
+const { check, validationResult } = require('express-validator')
 
 function tutorController() {
 
@@ -20,6 +22,15 @@ function tutorController() {
         }
         //name = toCaps(name);
         debug(name, subject)
+
+        const errors = validationResult(req)    
+        if(!errors.isEmpty()) {
+          res.json( {
+            message: 'Errors in code.',
+            errorMessages: errors
+          })
+          return
+        }
         const tutor = new Tutor({ name, level, classes, subject })
 
         const exist = await Tutor.exists({ name })
@@ -32,7 +43,7 @@ function tutorController() {
         const newtutor = await Category.findOneAndUpdate({ category: 'student' }, { $push: { tutors: tu._id } }, { new: true })
         
         if (req.user.category === 'tutor') {
-          const newSub = await User.findByIdAndUpdate({ _id: req.user.category }, { $push: { subjects: subject } }, { new: true })
+          const newSub = await User.findByIdAndUpdate({ _id: req.user.id }, { $push: { subjects: subject } }, { new: true })
         }
         debug(chalk.red(tu, newtutor))
 
@@ -45,7 +56,7 @@ function tutorController() {
               tutors: [tu._id],
               category: level
             })
-          const addedSubject = await Subject.findOne({ subject: s }).exec()
+          const addedSubject = await Subject.findOne({ subject: s, category: level }).exec()
           debug(addedSubject)
           if (!addedSubject) {
             const sub = await subj.save()

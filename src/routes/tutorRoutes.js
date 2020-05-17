@@ -4,12 +4,18 @@ const auth = require('../utils/auth')
 const admin = require('../utils/admin')
 const tutorController = require('../controllers/tutorController')
 const cacheMiddleware = require('../utils/cacheMiddleware')
+const { check } = require('express-validator')
 
 function router() {
   const { addTutor, getAllTutors, getAll, getTutorById, deleteTutorById, searchTutorByFirstName } = tutorController()
 
   tutorRouter.route('/')
-    .post(auth, addTutor)
+    .post(auth, [
+      check('name', 'Name is too short').isLength({ min: 9 }),
+      check('level', 'Invalid level').notEmpty(),
+      check('classes', 'Empty message').notEmpty(),
+      check('subject', 'Empty message').notEmpty()
+    ], addTutor)
     //retrieve all tutors (only admin)
     .get(admin, cacheMiddleware, getAllTutors)
   tutorRouter.route('/subject')
