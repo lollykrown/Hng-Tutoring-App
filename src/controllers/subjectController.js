@@ -1,8 +1,8 @@
-const Subject = require('../models/subject');
-const Category = require('../models/category');
-const User = require('../models/users');
-const debug = require('debug')('app:subjectController');
-const chalk = require('chalk');
+const Subject = require('../models/subject')
+const Category = require('../models/category')
+const User = require('../models/users')
+const debug = require('debug')('app:subjectController')
+const chalk = require('chalk')
 
 function subjectController() {
   function getAll(req, res) {
@@ -10,9 +10,9 @@ function subjectController() {
       try {
         Subject.find({}).exec()
           .then(docs => res.json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
@@ -22,22 +22,22 @@ function subjectController() {
       try {
         Subject.find({}, { _id: 0, category: 1, subject: 1 }).exec()
           .then(docs => res.status(200).json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
 
   function search(req, res) {
     (async function searchSubjects() {
-      const str = req.query.q;
+      const str = req.query.q
       try {
         Subject.find({ subject: { $regex: '^' + str, $options: 'i' } }, null, { sort: { subject: 1 } }).select("-tutors").exec()
           .then(docs => res.status(200).json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack);
       }
     }());
   }
@@ -46,38 +46,37 @@ function subjectController() {
     if (req.user.isAdmin === true) {
       (async function postSubjects() {
         try {
-          const { subject } = req.body;
+          const { subject } = req.body
           if (!subject) {
             res.status(400).send({
               status: false,
               message: 'All fields are required'
-            });
-            return;
+            })
+            return
           }
-          const category = req.params.category;
-
+          const category = req.params.category
           debug(chalk.blue(category))
-          const sub = new Subject({ subject, category });
+          const sub = new Subject({ subject, category })
 
-          const exists = await Subject.exists({ subject });
-          debug(chalk.yellow(exists));
+          const exists = await Subject.exists({ subject })
+          debug(chalk.yellow(exists))
           if (exists) {
             return res.status(423)
-              .send({ status: false, message: `${subject} already exist` });
+              .send({ status: false, message: `${subject} already exist` })
           }
-          const su = await sub.save();
+          const su = await sub.save()
           debug(su);
-          const newSubject = await Category.findOneAndUpdate({ category: 'student' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true });
-          const newSubject2 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true });
+          const newSubject = await Category.findOneAndUpdate({ category: 'student' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true })
+          const newSubject2 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true })
 
-          debug(newSubject, newSubject2);
-          res.status(200).json({ status: true, message: 'Subject saved' });
+          debug(newSubject, newSubject2)
+          res.status(204).json({ status: true, message: 'Subject saved' })
         } catch (err) {
-          console.log(err.stack);
+          debug(err.stack);
         }
       }());
     } else {
-      res.status(401).send('Access denied. You are not an Admin.');
+      res.status(401).send('Access denied. You are not an Admin.')
     }
   }
 
@@ -86,22 +85,22 @@ function subjectController() {
       try {
         Subject.find({ category: req.params.category }).select("-tutors").exec()
           .then(docs => res.status(200).json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
 
   function updateCategory(req, res) {
     (async function updateCat() {
-      const { category } = req.body;
+      const { category } = req.body
       try {
         Subject.updateMany({ category: req.params.category }, { $set: { category } }).exec()
           .then(docs => res.status(200).json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
@@ -110,13 +109,13 @@ function subjectController() {
     (async function del() {
       try {
         Subject.deleteMany({ category: req.params.category }).exec()
-          .then(docs => res.status(200).json({
+          .then(docs => res.status(204).json({
             status: true,
             message: `category ${req.params.category} deleted`,
           }))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
@@ -127,13 +126,13 @@ function subjectController() {
         try {
           Subject.find({ category: req.params.category, subject: req.body.subject }).populate('tutors', '-_id name subject').select('-_id').exec()
             .then(docs => res.status(200).json(docs))
-            .catch(err => console.log(`Oops! ${err.stack}`));
+            .catch(err => debug(`Oops! ${err.stack}`))
         } catch (err) {
-          console.log(err.stack);
+          debug(err.stack)
         }
       }());
     } else {
-      res.status(401).send('Access denied. You are not a Student.');
+      res.status(401).send('Access denied. You are not a Student.')
     }
   }
 
@@ -141,40 +140,40 @@ function subjectController() {
     if (req.user.category === 'tutor') {
       (async function registerSubject() {
         try {
-          const { subject } = req.body;
+          const { subject } = req.body
           if (!subject) {
             res.status(400).send({
               status: false,
               message: 'Subject field is required'
-            });
-            return;
+            })
+            return
           }
-          const category = req.params.category;
+          const category = req.params.category
 
           debug(chalk.blue(category))
-          const sub = new Subject({ subject, category });
+          const sub = new Subject({ subject, category })
 
-          const exists = await Subject.exists({ subject });
-          debug(chalk.yellow(exists));
+          const exists = await Subject.exists({ subject })
+          debug(chalk.yellow(exists))
           if (exists) {
-            const newSub = await User.findByIdAndUpdate({ _id: req.user.id }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true });
+            const newSub = await User.findByIdAndUpdate({ _id: req.user.id }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true })
             return res.status(200)
-              .send({ status: true, message: `${subject} saved successfully` });
+              .send({ status: true, message: `${subject} saved successfully` })
           }
-          const su = await sub.save();
-          debug(su);
-          const newSubject = await Category.findOneAndUpdate({ category: 'student' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true });
-          const newSubject2 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true });
-          const newSub = await User.findByIdAndUpdate({ _id: req.user.id }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true });
+          const su = await sub.save()
+          debug(su)
+          const newSubject = await Category.findOneAndUpdate({ category: 'student' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true })
+          const newSubject2 = await Category.findOneAndUpdate({ category: 'tutor' }, { $push: { subjects: su._id } }, { useFindAndModify: false, new: true })
+          const newSub = await User.findByIdAndUpdate({ _id: req.user.id }, { $push: { subjects: subject } }, { useFindAndModify: false, new: true })
 
-          debug(newSubject, newSubject2, newSub);
-          res.status(200).json({ status: true, message: `${subject} saved successfully` });
+          debug(newSubject, newSubject2, newSub)
+          res.status(201).json({ status: true, message: `${subject} saved successfully` })
         } catch (err) {
-          console.log(err.stack);
+          debug(err.stack)
         }
       }());
     } else {
-      res.status(401).send('Access denied. You are not a Tutor.');
+      res.status(401).send('Access denied. You are not a Tutor.')
     }
   }
 
@@ -184,76 +183,76 @@ function subjectController() {
         try {
           User.findById({ _id: req.user.id }).select('subjects').exec()
             .then(docs =>
-              res.json(docs))
-            .catch(err => console.log(`Oops! ${err.stack}`));
+              res.status(200).json(docs))
+            .catch(err => debug(`Oops! ${err.stack}`))
         } catch (err) {
-          console.log(err.stack);
+          debug(err.stack)
         }
       }());
     } else {
-      res.status(401).send('Access denied. You are not a Tutor.');
+      res.status(401).send('Access denied. You are not a Tutor.')
     }
   }
 
   function updateRegisteredSubject(req, res) {
     if (req.user.category === 'tutor') {
       (async function updateReg() {
-        const { old_subject, new_subject } = req.body;
-        const category = req.params.category;
+        const { old_subject, new_subject } = req.body
+        const category = req.params.category
 
         const replaceArrItem = (original, replacement, arr) => {
           const index = arr.indexOf(original);
           if (~index) {
-            arr[index] = replacement;
+            arr[index] = replacement
           }
-          return arr;
-        };
+          return arr
+        }
 
         try {
-          const us = await User.findById({ _id: req.user.id }).exec();
-            debug(us.subjects);
+          const us = await User.findById({ _id: req.user.id }).exec()
+            debug(us.subjects)
             const newArr = replaceArrItem(old_subject, new_subject, us.subjects)
             debug(newArr)
             //user.subjects = newArr;
             //const updated = user.save();
-            const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: newArr}}, { useFindAndModify: false, new: true })
-            res.status(200).json(updated);
+            const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: newArr}}, { new: true })
+            res.status(200).json(updated)
         } catch (err) {
-          console.log(err.stack);
+          debug(err.stack)
         }
       }());
     } else {
-      res.status(401).send('Access denied. You are not a Tutor.');
+      res.status(401).send('Access denied. You are not a Tutor.')
     }
   }
 
   function deleteSubjectByCategory(req, res) {
     (async function deleteSubject() {
-      const { subject } = req.body;
-      debug(subject);
+      const { subject } = req.body
+      debug(subject)
 
       const deleteArrItem = (item, arr) => {
-        const index = arr.indexOf(item);
+        const index = arr.indexOf(item)
         if (~index) {
-          arr.splice(index,1);
+          arr.splice(index,1)
         }
-        return arr;
+        return arr
       };
 
       try {
-        const us = await User.findById({ _id: req.user.id }).exec();
-        debug(us.subjects);
-        const del = deleteArrItem(subject, us.subjects);
-        debug(chalk.yellow(del));
+        const us = await User.findById({ _id: req.user.id }).exec()
+        debug(us.subjects)
+        const del = deleteArrItem(subject, us.subjects)
+        debug(chalk.yellow(del))
 
-        const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: del}}, { useFindAndModify: false, new: true })
-         res.status(200).json({
+        const updated = await User.updateOne({ _id: req.user.id }, {$set: {subjects: del}}, { new: true })
+         res.status(204).json({
             status: true,
             message: `${subject} has been succesfully deleted`,
           });
 
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
@@ -263,23 +262,23 @@ function subjectController() {
       try {
         Subject.find({ category: req.params.category, _id: req.params.id }).exec()
           .then(docs => res.status(200).json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
 
   function updateSubjectByCategoryById(req, res) {
     (async function updateSubject() {
-      const { subject } = req.body;
-      debug(subject);
+      const { subject } = req.body
+      debug(subject)
       try {
-        Subject.findByIdAndUpdate({ _id: req.params.id }, { $set: { subject } }, { useFindAndModify: false, new: true }).exec()
+        Subject.findByIdAndUpdate({ _id: req.params.id }, { $set: { subject } }, { new: true }).exec()
           .then(docs => res.status(200).json(docs))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
@@ -288,13 +287,13 @@ function subjectController() {
     (async function deleteSubjectByCategoryById() {
       try {
         Subject.findByIdAndDelete({ _id: req.params.id }).exec()
-          .then(docs => res.status(200).json({
+          .then(docs => res.status(204).json({
             status: true,
             message: `${docs.subject} deleted`,
           }))
-          .catch(err => console.log(`Oops! ${err.stack}`));
+          .catch(err => debug(`Oops! ${err.stack}`))
       } catch (err) {
-        console.log(err.stack);
+        debug(err.stack)
       }
     }());
   }
@@ -315,7 +314,7 @@ function subjectController() {
     getSubjectByCategoryById,
     updateSubjectByCategoryById,
     deleteSubjectByCategoryById
-  };
+  }
 }
 
-module.exports = subjectController;
+module.exports = subjectController
