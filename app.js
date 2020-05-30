@@ -7,7 +7,7 @@ const path = require('path');
 
 const cors = require('cors')
 
-//process.env.NODE_ENV = 'production';
+process.env.NODE_ENV = 'production';
 
 const app = express();
 require('./config/config.js');
