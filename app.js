@@ -15,6 +15,13 @@ require('./config/config.js');
 mongoose.connect(global.gConfig.database_url, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next()
+})
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('tiny'));
