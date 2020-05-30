@@ -6,15 +6,14 @@ const path = require('path')
 const debug = require('debug')('app:root')
 const helmet = require('helmet')
 const expressValidator = require('express-validator')
-
-// const cors = require('cors')
+const cors = require('cors')
 
 // process.env.NODE_ENV = 'production'
 
 const app = express();
 //app.use(expressValidator())
 
-require('./config/config.js');
+require('./config/config.js')
 
 const options = {
   useNewUrlParser: true,
@@ -30,6 +29,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('tiny'))
 app.use(helmet())
+app.use(cors())
 
 const authRouter = require('./src/routes/authRoutes')()
 const categoryRouter = require('./src/routes/categoryRoutes')()
